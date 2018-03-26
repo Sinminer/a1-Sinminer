@@ -2,10 +2,11 @@
 Replace the contents of this module docstring with your own details.
 """
 
-
+from operator import itemgetter
 def main():
     print("Movies To Watch 1.0 - by Robert Sinclair.")
-    movie_list = load_file()
+    movie_list = sort_list(load_file())
+    display_movies(movie_list)
     menu()
 
 
@@ -15,10 +16,24 @@ def load_file():
     for line in file:
         line = (line.strip("\n")).split(",")
         line[1] = int(line[1])
-        print(str(line))
+        #print(str(line))
         movie_list.append(line)
+    print("{} movies loaded".format(len(movie_list)))
     return movie_list
 
+
+
+
+def display_movies(movie_list):
+    watched_count = 0
+    for i in range(len(movie_list)):
+        if movie_list[i][3] == "n":
+
+            print("{0}. * {1[0]:<35} -  {1[1]:>4} ({1[2]})".format(i, movie_list[i]))
+        else:
+            watched_count += 1
+            print("{0}.  {1[0]:<35} -  {1[1]:>4} ({1[2]})".format(i, movie_list[i]))
+    print("{} movies watched, {} movies still to watch".format(watched_count, len(movie_list) - watched_count))
 
 
 
@@ -59,18 +74,7 @@ def add_movie():
         add_watched.write("*")
 
 
-
-
-
-
-def list_movies():
-    count = -1
-    movies_list = open("movies.csv", "r+")
-    for line in movies_list:
-        stripped_line = line.rstrip()
-        count += 1
-        print(str(count)+" " + stripped_line)
-    movies_list.close()
-    menu()
+def sort_list(movie_list):
+    return sorted(movie_list, key=(itemgetter(1, 0)))
 
 main()
