@@ -7,7 +7,7 @@ def main():
     print("Movies To Watch 1.0 - by Robert Sinclair.")
     movie_list = sort_list(load_file())
     display_movies(movie_list)
-    menu()
+    menu(movie_list)
 
 
 def load_file():
@@ -38,17 +38,18 @@ def display_movies(movie_list):
 
 
 
+def sort_list(movie_list):
+    return sorted(movie_list, key=(itemgetter(1, 0)))
 
 
-
-def menu():
+def menu(movie_list):
         choice = ""
         print("Menu:")
         print("L - List movies")
         print("A - Add new movie")
         print("W - Watch a movie")
         print("Q - Quit")
-        while choice not in ["Q"]:
+        while choice != "Q":
             choice = (input(">>>")).upper()
             if choice not in ["Q","A","L","W"]:
                 print("Invalid menu choice")
@@ -60,7 +61,7 @@ def menu():
             elif choice == "Q":
                 pass
             elif choice == "A":
-                add_movie()
+                add_movie(movie_list)
             elif choice == "W":
                 watch_movie()
             else:
@@ -68,13 +69,38 @@ def menu():
 
 
 
-def add_movie():
-    def watch_movie():
-        add_watched = open("movies.csv", "r+")
-        add_watched.write("*")
+def add_movie(movie_list):
+
+    print("Title: ", end="")
+    movie_title = validate_strings()
+    while True:
+        try:
+            movie_year = int(input("Year:"))
+            if movie_year <= 0:
+                break
+            else:
+                print("Invalid input, enter a valid number")
+        except ValueError:
+            print("Invalid input, enter a valid number")
+    print("Category: ", end="")
+    movie_category = validate_strings()
+    movie = [movie_title,movie_year,movie_category,"n"]
+    movie_list.append(movie)
+    return movie_list
 
 
-def sort_list(movie_list):
-    return sorted(movie_list, key=(itemgetter(1, 0)))
+def validate_strings():
+
+    while True:
+        user_input = input()
+        if user_input == "":
+            print("Invalid input")
+        else:
+            break
+    return user_input
+
+
+
+add_movie()
 
 main()
